@@ -1,0 +1,23 @@
+CXX_STD = CXX11
+PKG_CPPFLAGS = -I. -I./cctz/include/ -I./cctz/src/
+PKG_LIBS = -L. -lcctz
+
+CCTZ_OBJECTS = ./cctz/src/time_zone_fixed.o \
+               ./cctz/src/time_zone_if.o \
+               ./cctz/src/time_zone_impl.o \
+               ./cctz/src/time_zone_info.o \
+               ./cctz/src/time_zone_libc.o \
+               ./cctz/src/time_zone_lookup.o \
+               ./cctz/src/time_zone_posix.o
+
+$(SHLIB): libcctz.a
+
+OBJECTS = RcppExports.o update.o utils.o datetime.o period.o tparse.o
+$(OBJECTS): libcctz.a
+
+libcctz.a: $(CCTZ_OBJECTS)
+	$(AR) rcs libcctz.a $(CCTZ_OBJECTS)
+
+.PHONY: clean
+clean:
+	rm -f $(CCTZ_OBJECTS) $(OBJECTS) libcctz.a lubridate.so
